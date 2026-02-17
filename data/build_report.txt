@@ -1,0 +1,32 @@
+XSteam-Lite Build Report
+
+A1 (data/canonical_csv/Table_A1.csv)
+  rows_total=76
+  rows_parsed=76
+  rows_skipped=0
+  precision_text={'T_C': 2, 'P_kPa': 3, 'vf': 6, 'vg': 6, 'uf': 2, 'ug': 1, 'hf': 2, 'hg': 1, 'sf': 4, 'sg': 4}
+
+A2 (data/canonical_csv/Table_A2.csv)
+  rows_total=112
+  rows_parsed=112
+  rows_skipped=0
+  precision_text={'T_C': 2, 'P_kPa': 4, 'vf': 6, 'vg': 6, 'uf': 2, 'ug': 1, 'hf': 2, 'hg': 1, 'sf': 4, 'sg': 4}
+
+A3 (data/canonical_csv/Table_A3.csv)
+  rows_total=1193
+  rows_parsed=1193
+  rows_skipped=0
+  pressure_blocks=73
+  block_row_counts=[21, 20, 20, 20, 20, 20, 19, 19, 19, 19, 19, 19, 19, 18, 18, 18, 18, 18, 18, 18, 18, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14]
+  precision_text={'P_kPa': 0, 'T_C': 2, 'v': 6, 'u': 1, 'h': 1, 's': 4}
+
+A4 (data/canonical_csv/Table_A4.csv)
+  rows_total=883
+  rows_parsed=883
+  rows_skipped=0
+  pressure_blocks=29
+  block_row_counts=[16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 26, 27, 28, 29, 30, 31, 32, 33, 35, 36, 37, 38, 45, 45, 45, 45, 45, 45]
+  precision_text={'P_kPa': 0, 'T_C': 2, 'v': 6, 'u': 3, 'h': 3, 's': 6}
+
+PRECISION (display metadata)
+  {'P_kPa': 4.0, 'T_C': 2.0, 'v': 6.0, 'u': 3.0, 'h': 3.0, 's': 6.0, 'x': 6, 'vf': 6.0, 'vg': 6.0, 'uf': 2.0, 'ug': 1.0, 'hf': 2.0, 'hg': 1.0, 'sf': 4.0, 'sg': 4.0}
