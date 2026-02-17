@@ -1,0 +1,64 @@
+{
+  "tables": [
+    {
+      "table": "A1",
+      "file": "Table_A1.csv",
+      "format": "tidy",
+      "pressure_column": "P_kPa",
+      "temperature_column": "T_C",
+      "columns": {
+        "vf": "vf_m3_per_kg",
+        "vg": "vg_m3_per_kg",
+        "uf": "uf_kJ_per_kg",
+        "ug": "ug_kJ_per_kg",
+        "hf": "hf_kJ_per_kg",
+        "hg": "hg_kJ_per_kg",
+        "sf": "sf_kJ_per_kgK",
+        "sg": "sg_kJ_per_kgK"
+      }
+    },
+    {
+      "table": "A2",
+      "file": "Table_A2.csv",
+      "format": "tidy",
+      "pressure_column": "P_kPa",
+      "temperature_column": "T_C",
+      "columns": {
+        "vf": "vf_m3_per_kg",
+        "vg": "vg_m3_per_kg",
+        "uf": "uf_kJ_per_kg",
+        "ug": "ug_kJ_per_kg",
+        "hf": "hf_kJ_per_kg",
+        "hg": "hg_kJ_per_kg",
+        "sf": "sf_kJ_per_kgK",
+        "sg": "sg_kJ_per_kgK"
+      }
+    },
+    {
+      "table": "A3",
+      "file": "Table_A3.csv",
+      "format": "tidy",
+      "pressure_column": "P_kPa",
+      "temperature_column": "T_C",
+      "columns": {
+        "v": "v_m3_per_kg",
+        "u": "u_kJ_per_kg",
+        "h": "h_kJ_per_kg",
+        "s": "s_kJ_per_kgK"
+      }
+    },
+    {
+      "table": "A4",
+      "file": "Table_A4.csv",
+      "format": "tidy",
+      "pressure_column": "P_kPa",
+      "temperature_column": "T_C",
+      "columns": {
+        "v": "v_m3_per_kg",
+        "u": "u_kJ_per_kg",
+        "h": "h_kJ_per_kg",
+        "s": "s_kJ_per_kgK"
+      }
+    }
+  ]
+}
