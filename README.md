@@ -18,7 +18,7 @@ XSteam-Lite is a production-oriented steam table engine that reads immutable can
 - Full state solver via `state(**known)`
 - Units-aware auto-print via `state_u()` and `_u` helpers
 - Built-in command discovery via `lookup()` and `help_fn()`
-- Standalone TI bundle via `tinspire/steam_bundle.py`
+- Standalone TI bundle via `s.py`
 
 ## 🧠 Architecture
 
@@ -28,7 +28,7 @@ Build and runtime flow:
 2. `tools/build_data.py` + `data/schema.json`
 3. `data/steam_data.py` (embedded arrays)
 4. `tinspire/steam.py` (runtime engine)
-5. `tools/bundle.py` -> `tinspire/steam_bundle.py` (standalone deployable)
+5. `tools/bundle.py` -> `s.py` (standalone deployable)
 
 Why piecewise interpolation:
 
@@ -83,13 +83,20 @@ Vapor dome behavior:
 # python tools/build_data.py
 # python tools/bundle.py
 #
-# 2) Copy tinspire/steam_bundle.py into TI Python environment.
+# 2) Copy s.py into TI Python environment.
 
-import steam_bundle as steam
+import s
 
-steam.state_help()
-steam.state_u(P_kPa=1000, T_C=400)
-steam.lookup("sat")
+s.s(P=1000,T=400)
+s.h()
+```
+
+## TI Quick Commands
+
+```python
+import s
+s.s(P=1000,T=400)
+s.h()
 ```
 
 ## 🧪 Testing & Verification
@@ -129,8 +136,8 @@ python tests/test_linearity.py
 │   ├── steam_data.py
 │   └── build_report.txt
 ├── tinspire
-│   ├── steam.py
-│   └── steam_bundle.py
+│   └── steam.py
+├── s.py
 ├── tools
 │   ├── build_data.py
 │   └── bundle.py

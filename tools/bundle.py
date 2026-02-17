@@ -6,7 +6,7 @@ Concatenates:
 2) tinspire/steam.py
 
 The data import in tinspire/steam.py is stripped so the output is a standalone
-`tinspire/steam_bundle.py` module with no external dependencies.
+`s.py` module with no external dependencies.
 """
 
 import argparse
@@ -42,7 +42,9 @@ def build_bundle(data_path, steam_path, output_path):
     out.append("# ---- embedded steam core ----\n")
     out.append(steam_src)
 
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    out_dir = os.path.dirname(output_path)
+    if out_dir:
+        os.makedirs(out_dir, exist_ok=True)
     with open(output_path, "w", encoding="utf-8") as handle:
         handle.write("".join(out))
 
@@ -51,7 +53,7 @@ def main():
     parser = argparse.ArgumentParser(description="Build single-file TI deploy bundle")
     parser.add_argument("--data", default="data/steam_data.py", help="Path to steam_data.py")
     parser.add_argument("--steam", default="tinspire/steam.py", help="Path to core steam module")
-    parser.add_argument("--output", default="tinspire/steam_bundle.py", help="Output bundle path")
+    parser.add_argument("--output", default="s.py", help="Output bundle path")
     args = parser.parse_args()
 
     build_bundle(args.data, args.steam, args.output)

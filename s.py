@@ -12781,7 +12781,7 @@ def state(**known):
                 return result
 
             result["needs"] = ["x or one of v/u/h/s"]
-            result["notes"].append("At saturation boundary, one extra independent property is required.")
+            result["notes"].append("Need one more input: X or one of V/U/H/S at saturation boundary.")
             return result
         except Exception as exc:
             result["region"] = "unknown"
@@ -13066,36 +13066,86 @@ def state_u(**known):
 
 def _state_help_text():
     lines = []
-    lines.append("state() solves whatever it can from known properties.")
+    lines.append("s(...) is the short TI alias for state_u(...).")
     lines.append("")
-    lines.append("Accepted inputs:")
-    lines.append("P_kPa [kPa], T_C [°C], x [-], v [m^3/kg], u [kJ/kg], h [kJ/kg], s [kJ/kg-K]")
+    lines.append("KEYS (named inputs):")
+    lines.append("  P = pressure [kPa]")
+    lines.append("  T = temperature [°C]")
+    lines.append("  X = quality [-]")
+    lines.append("  V = specific volume [m^3/kg]")
+    lines.append("  U = internal energy [kJ/kg]")
+    lines.append("  H = enthalpy [kJ/kg]")
+    lines.append("  S = entropy [kJ/kg-K]  (ENT also accepted)")
     lines.append("")
-    lines.append("Returns keys:")
-    lines.append("region, computed, needs, sat, notes, units")
+    lines.append("Units are assumed. Do not type units in function calls.")
     lines.append("")
-    lines.append("Region logic:")
-    lines.append("compressed / superheated / two-phase")
+    lines.append("s(...) auto-prints solver output and returns None.")
+    lines.append("The full solver state(...) returns: region, computed, needs, sat, notes, units.")
     lines.append("")
-    lines.append("Inside vapor dome:")
-    lines.append("If x is not provided, state() will NOT guess x; it returns needs.")
+    lines.append("Vapor dome behavior:")
+    lines.append("If state is two-phase and X is not provided, it will not guess quality.")
+    lines.append("Need one more input: X or one of V/U/H/S.")
     lines.append("")
-    lines.append("Known combinations:")
-    lines.append("state(P_kPa=..., T_C=...)")
-    lines.append("state(P_kPa=..., x=...)")
-    lines.append("state(T_C=..., x=...)")
-    lines.append("state(P_kPa=..., v=...)")
-    lines.append("state(T_C=..., h=...)")
+    lines.append("Examples:")
+    lines.append("  s(P=1000,T=400)")
+    lines.append("  s(P=101.325,T=100)   -> will say vapor dome; needs X or V/U/H/S")
+    lines.append("  s(T=100,X=0.2)")
+    lines.append("  s(P=100,V=0.004)")
     lines.append("")
-    lines.append("Auto-print:")
-    lines.append("state_u(P_kPa=1000, T_C=400)")
-    lines.append("state_u(P_kPa=101.325, T_C=100)")
-    lines.append("state_u(T_C=100, x=0.2)")
+    lines.append("Full commands:")
+    lines.append("  state(**known)")
+    lines.append("  state_u(**known)")
+    lines.append("  state_help()")
     return "\n".join(lines)
 
 
 def state_help():
     """Print TI-friendly guide for state() and state_u()."""
+    text = _state_help_text()
+    print(text)
+    return None
+
+
+def _map_short_state_key(key):
+    key_u = str(key).strip().upper()
+    mapping = {
+        "P": "P_kPa",
+        "T": "T_C",
+        "X": "x",
+        "V": "v",
+        "U": "u",
+        "H": "h",
+        "S": "s",
+        "ENT": "s",
+        "P_KPA": "P_kPa",
+        "T_C": "T_C",
+    }
+    return mapping.get(key_u)
+
+
+def s(*args, **K):
+    """Alias for state_u with named short keys only."""
+    if args:
+        raise ValueError("Use named inputs only. Example: s(P=1000,T=400)")
+
+    mapped = {}
+    source = {}
+    for key, value in K.items():
+        canonical = _map_short_state_key(key)
+        if canonical is None:
+            raise ValueError("Unsupported key '{}'. Use P,T,X,V,U,H,S or ENT.".format(key))
+        if canonical in mapped:
+            raise ValueError(
+                "Duplicate key mapping for '{}': '{}' and '{}'.".format(canonical, source[canonical], key)
+            )
+        mapped[canonical] = value
+        source[canonical] = key
+
+    return state_u(**mapped)
+
+
+def h():
+    """Short TI alias for state_help()."""
     text = _state_help_text()
     print(text)
     return None
@@ -13227,7 +13277,7 @@ def lookup(keyword):
 def help_fn(name):
     """Return a multi-line help block for one function."""
     query = str(name).strip().lower()
-    if query == "state_help":
+    if query == "state_help" or query == "h":
         text = _state_help_text()
         print(text)
         return text
@@ -13445,6 +13495,21 @@ _DOCS = {
         "notes": "Uses deterministic priority: (P,T) -> (T,x) -> (P,x) -> (P,prop) -> (T,prop). See state_help().",
         "tags": ["state", "solver", "flash", "region", "sat", "pT", "quality", "units"],
     },
+    "s": {
+        "sig": "s(**K)",
+        "does": "All-caps-friendly short alias for state_u using short named keys.",
+        "requires": ["K keys: P,T,X,V,U,H,S/ENT (units assumed)"],
+        "returns": "None [prints formatted state]",
+        "notes": "Named inputs only. Positional args raise an explicit usage error.",
+        "tags": ["state", "alias", "ti", "help", "units", "print"],
+    },
+    "h": {
+        "sig": "h()",
+        "does": "Print TI quick guide for s(...) key map, units, and examples.",
+        "requires": [],
+        "returns": "None [prints guide]",
+        "tags": ["state", "help", "alias", "ti", "print"],
+    },
     "state_help": {
         "sig": "state_help()",
         "does": "Printable TI-friendly usage guide for state() and state_u().",
@@ -13593,6 +13658,8 @@ __all__ = [
     "state",
     "state_u",
     "state_help",
+    "s",
+    "h",
     "lookup",
     "help_fn",
     "list_commands",

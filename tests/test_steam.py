@@ -103,6 +103,8 @@ def test_lookup_sat_and_energy():
     state_blob = "\n".join(state_hits)
     assert "state(**known)" in state_blob
     assert "P_kPa [kPa]" in state_blob
+    assert "s(**K)" in state_blob
+    assert "h()" in state_blob
 
 
 def test_help_fn_and_units_wrappers():
@@ -181,10 +183,11 @@ def test_state_solver_paths():
 def test_state_help_text():
     ret, printed = capture_output(steam.state_help)
     assert ret is None
-    assert "P_kPa [kPa]" in printed
-    assert "T_C [°C]" in printed
-    assert "Inside vapor dome" in printed
-    assert printed.count("state(") >= 3
+    assert "P = pressure [kPa]" in printed
+    assert "T = temperature [°C]" in printed
+    assert "Vapor dome behavior" in printed
+    assert "Need one more input" in printed
+    assert "state(" in printed
     assert "state_u(" in printed
 
     ret2, printed2 = capture_output(steam.state_u, P_kPa=1000, T_C=400)
@@ -205,8 +208,42 @@ def test_state_help_text():
 
     ret4, printed4 = capture_output(steam.help_fn, "state_help")
     assert isinstance(ret4, str)
-    assert "P_kPa [kPa]" in printed4
+    assert "P = pressure [kPa]" in printed4
     assert "state_u(" in printed4
+
+
+def test_short_alias_s_and_h():
+    ret, printed = capture_output(steam.s, P=1000, T=400)
+    assert ret is None
+    assert "region:" in printed
+    assert "kPa" in printed
+    assert "°C" in printed
+
+    try:
+        steam.s(1000, 400)
+        raise AssertionError("expected named-input-only error")
+    except Exception as exc:
+        assert str(exc) == "Use named inputs only. Example: s(P=1000,T=400)"
+
+    ret2, printed2 = capture_output(steam.s, P=101.325, T=100)
+    assert ret2 is None
+    assert "Need one more input" in printed2
+
+    # Case-insensitive keys + ENT alias
+    ret3, printed3 = capture_output(steam.s, p=100, ent=2.0)
+    assert ret3 is None
+    assert "state() result" in printed3
+
+    ret4, printed4 = capture_output(steam.s, P=100, ENT=2.0)
+    assert ret4 is None
+    assert "state() result" in printed4
+
+    ret_h, printed_h = capture_output(steam.h)
+    assert ret_h is None
+    assert "KEYS (named inputs):" in printed_h
+    assert "Units are assumed. Do not type units in function calls." in printed_h
+    assert "P = pressure [kPa]" in printed_h
+    assert "ENT also accepted" in printed_h
 
 
 def run_all():
@@ -218,6 +255,7 @@ def run_all():
     test_with_units_sat_dict_rendering()
     test_state_solver_paths()
     test_state_help_text()
+    test_short_alias_s_and_h()
 
 
 if __name__ == "__main__":

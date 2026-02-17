@@ -49,9 +49,9 @@ def test_schema_and_build_outputs():
 
     assert os.path.exists(abs_path("data/steam_data.py")), "missing data/steam_data.py"
     assert os.path.exists(abs_path("data/build_report.txt")), "missing data/build_report.txt"
-    assert os.path.exists(abs_path("tinspire/steam_bundle.py")), "missing tinspire/steam_bundle.py"
+    assert os.path.exists(abs_path("s.py")), "missing s.py"
 
-    subprocess.run([sys.executable, "-m", "py_compile", "tinspire/steam_bundle.py"], cwd=ROOT, check=True)
+    subprocess.run([sys.executable, "-m", "py_compile", "s.py"], cwd=ROOT, check=True)
 
     steam_data = importlib.import_module("data.steam_data")
     assert hasattr(steam_data, "PRECISION"), "data.steam_data missing PRECISION metadata"
@@ -59,6 +59,10 @@ def test_schema_and_build_outputs():
     assert isinstance(precision, dict), "PRECISION must be a dict"
     for key in ("P_kPa", "T_C", "v", "u", "h", "s", "x"):
         assert key in precision, "PRECISION missing key {}".format(key)
+
+    bundle_mod = importlib.import_module("s")
+    assert hasattr(bundle_mod, "s"), "bundle missing s() alias"
+    assert hasattr(bundle_mod, "h"), "bundle missing h() alias"
 
 
 def test_no_rounding_or_fixed_decimal_format_in_core_files():
@@ -79,7 +83,7 @@ def test_no_legacy_artifacts():
 
 
 def test_bundle_standalone_purity():
-    bundle_src = open(abs_path("tinspire/steam_bundle.py"), "r", encoding="utf-8").read()
+    bundle_src = open(abs_path("s.py"), "r", encoding="utf-8").read()
     for line in bundle_src.splitlines():
         stripped = line.strip()
         assert not stripped.startswith("from "), "bundle contains from-import: {}".format(stripped)
